@@ -1,19 +1,16 @@
 import React, { Fragment, useEffect, useState } from "react";
-
 import EditTodo from "./EditTodo";
 
 const ListTodos = () => {
   const [todos, setTodos] = useState([]);
 
-  //delete todo function
-
-  const deleteTodo = async id => {
+  const deleteTodo = async (id) => {
     try {
       const deleteTodo = await fetch(`http://localhost:5000/todos/${id}`, {
-        method: "DELETE"
+        method: "DELETE",
       });
 
-      setTodos(todos.filter(todo => todo.todo_id !== id));
+      setTodos(todos.filter((todo) => todo.todo_id !== id));
     } catch (err) {
       console.error(err.message);
     }
@@ -34,23 +31,30 @@ const ListTodos = () => {
     getTodos();
   }, []);
 
-  console.log(todos);
+  // Function to format date as "YYYY-MM-DD"
+  const formatDate = (dateString) => {
+    const options = { year: "numeric", month: "2-digit", day: "2-digit" };
+    return new Date(dateString).toLocaleDateString(undefined, options);
+  };
 
   return (
     <Fragment>
-      {" "}
       <table className="table mt-5 text-center">
         <thead>
           <tr>
             <th>Description</th>
+            <th>Start Date</th>
+            <th>End Date</th>
             <th>Edit</th>
             <th>Delete</th>
           </tr>
         </thead>
         <tbody>
-          {todos.map(todo => (
+          {todos.map((todo) => (
             <tr key={todo.todo_id}>
               <td>{todo.description}</td>
+              <td>{formatDate(todo.start_date)}</td> {/* Format start date */}
+              <td>{formatDate(todo.end_date)}</td> {/* Format end date */}
               <td>
                 <EditTodo todo={todo} />
               </td>

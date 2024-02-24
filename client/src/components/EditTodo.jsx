@@ -4,15 +4,17 @@ import { Modal, Button } from "react-bootstrap";
 const EditTodo = ({ todo }) => {
   const [showModal, setShowModal] = useState(false);
   const [description, setDescription] = useState(todo.description);
+  const [endTime, setEndTime] = useState(todo.end_time);
 
   const handleCloseModal = () => {
     setShowModal(false);
     setDescription(todo.description);
+    setEndTime(todo.end_time);
   };
 
   const handleSaveChanges = async () => {
     try {
-      const body = { description };
+      const body = { description, endDate: endTime };
       const response = await fetch(
         `http://localhost:5000/todos/${todo.todo_id}`,
         {
@@ -22,7 +24,6 @@ const EditTodo = ({ todo }) => {
         }
       );
       
-      // Close modal and reload page upon successful update
       handleCloseModal();
       window.location.reload();
     } catch (err) {
@@ -49,6 +50,12 @@ const EditTodo = ({ todo }) => {
             className="form-control"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
+          />
+          <input
+            type="date"
+            className="form-control mt-2"
+            value={endTime}
+            onChange={(e) => setEndTime(e.target.value)}
           />
         </Modal.Body>
         <Modal.Footer>
