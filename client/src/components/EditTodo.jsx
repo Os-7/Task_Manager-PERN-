@@ -1,34 +1,27 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 import { Modal, Button } from "react-bootstrap";
 
-const EditTodo = ({ todo }) => {
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
-  };
-  
+const EditTodo = ({ todo, onUpdate }) => {
   const [showModal, setShowModal] = useState(false);
   const [description, setDescription] = useState(todo.description);
-  const [endTime, setEndTime] = useState(formatDate(todo.endDate));
-
+  const [endTime, setEndTime] = useState(todo.end_date); 
+  const [status, setStatus] = useState(todo.status);
+  
   const handleCloseModal = () => {
     setShowModal(false);
   };
 
   const handleSaveChanges = async () => {
     try {
-      const body = { description, endDate: endTime };
+      const body = { endDate: endTime, status: status, description: description };
       const response = await fetch(`http://localhost:5000/todos/${todo.todo_id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body)
       });
-      
+
       handleCloseModal();
-      window.location.reload();
+      onUpdate();
     } catch (err) {
       console.error(err.message);
     }
@@ -36,6 +29,14 @@ const EditTodo = ({ todo }) => {
 
   const handleEndTimeChange = (e) => {
     setEndTime(e.target.value);
+  };
+
+  const handleStatusChange = (e) => {
+    setStatus(e.target.value);
+  };
+
+  const handleDescriptionChange = (e) => {
+    setDescription(e.target.value);
   };
 
   return (
@@ -56,14 +57,23 @@ const EditTodo = ({ todo }) => {
             type="text"
             className="form-control"
             value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            onChange={handleDescriptionChange}
           />
           <input
             type="date"
             className="form-control mt-2"
-            value={endTime}
+            value={todo.end_date}
             onChange={handleEndTimeChange}
           />
+          <select
+            className="form-control mt-2"
+            value={status}
+            onChange={handleStatusChange}
+          >
+            <option value="Pending">Pending</option>
+            <option value="Done">Done</option>
+            <option value="In Progress">In Progress</option>
+          </select>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleCloseModal}>

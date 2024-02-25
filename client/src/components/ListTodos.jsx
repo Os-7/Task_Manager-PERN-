@@ -1,3 +1,4 @@
+// ListTodos.js
 import React, { Fragment, useEffect, useState } from "react";
 import EditTodo from "./EditTodo";
 
@@ -37,6 +38,10 @@ const ListTodos = () => {
     return new Date(dateString).toLocaleDateString(undefined, options);
   };
 
+  const handleUpdateTodos = () => {
+    getTodos(); // Refresh todos after an edit operation
+  };
+
   return (
     <Fragment>
       <table className="table mt-5 text-center">
@@ -58,7 +63,7 @@ const ListTodos = () => {
               <td>{formatDate(todo.end_date)}</td> {/* Format end date */}
               <td>{todo.status}</td> {/* Status column */}
               <td>
-                <EditTodo todo={todo} />
+                <EditTodo todo={todo} onUpdate={handleUpdateTodos} /> {/* Pass onUpdate callback */}
               </td>
               <td>
                 <button
