@@ -45,6 +45,7 @@ const ListTodos = () => {
             <th>Description</th>
             <th>Start Date</th>
             <th>End Date</th>
+            <th>Status</th>
             <th>Edit</th>
             <th>Delete</th>
           </tr>
@@ -55,6 +56,7 @@ const ListTodos = () => {
               <td>{todo.description}</td>
               <td>{formatDate(todo.start_date)}</td> {/* Format start date */}
               <td>{formatDate(todo.end_date)}</td> {/* Format end date */}
+              <td>{todo.status}</td> {/* Status column */}
               <td>
                 <EditTodo todo={todo} />
               </td>
